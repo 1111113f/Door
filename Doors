@@ -1,0 +1,23 @@
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+-- Список разрешенных пользователей (можно заменить на запрос к GitHub)
+local allowedUsers = {
+    ["3866530309"] = true, -- Замени на реальные ID пользователей
+    ["3866530509"] = true
+}
+
+-- Функция для получения прав администратора
+local function giveAdminRights(player)
+    player:WaitForChild("PlayerGui").ScreenGui:WaitForChild("AdminGui").Enabled = true
+    player:WaitForChild("PlayerGui").ScreenGui:WaitForChild("AdminGui").Frame.Visible = true
+end
+
+-- Проверка ID пользователя и предоставление прав
+local function onPlayerAdded(player)
+    if allowedUsers[player.UserId] then
+        giveAdminRights(player)
+    end
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
