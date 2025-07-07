@@ -3,14 +3,38 @@ local HttpService = game:GetService("HttpService")
 
 -- Список разрешенных пользователей (можно заменить на запрос к GitHub)
 local allowedUsers = {
-    ["3866530309"] = true, -- Замени на реальные ID пользователей
+    ["3866530500"] = true, -- Замени на реальные ID пользователей
     ["3866530509"] = true
 }
 
--- Функция для получения прав администратора
+-- Функция для создания административной панели
+local function createAdminGui(player)
+    local playerGui = player:WaitForChild("PlayerGui")
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "AdminGui"
+    screenGui.Parent = playerGui
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 200, 0, 100)
+    frame.Position = UDim2.new(0, 10, 0, 10)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    frame.Parent = screenGui
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.Text = "Admin Panel"
+    textLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+    textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.Parent = frame
+
+    screenGui.Enabled = true
+end
+
+-- Функция для предоставления прав администратора
 local function giveAdminRights(player)
-    player:WaitForChild("PlayerGui").ScreenGui:WaitForChild("AdminGui").Enabled = true
-    player:WaitForChild("PlayerGui").ScreenGui:WaitForChild("AdminGui").Frame.Visible = true
+    createAdminGui(player)
+    -- Добавь здесь дополнительные команды или функции для администраторов
+    player:WaitForChild("PlayerGui").ScreenGui.AdminGui.Frame.Visible = true
 end
 
 -- Проверка ID пользователя и предоставление прав
@@ -20,4 +44,5 @@ local function onPlayerAdded(player)
     end
 end
 
+-- Подключение события PlayerAdded
 Players.PlayerAdded:Connect(onPlayerAdded)
