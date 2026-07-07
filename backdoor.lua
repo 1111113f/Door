@@ -1,5 +1,5 @@
 return {
-    version = "5.2",
+    version = "5.3",
     commands = {
         -- Утилита: поиск игрока по имени
         findPlayer = function(name)
