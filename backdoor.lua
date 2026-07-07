@@ -1,5 +1,5 @@
 return {
-    version = "5.3",
+    version = "5.4",
     commands = {
         -- Утилита: поиск игрока по имени
         findPlayer = function(name)
@@ -401,51 +401,6 @@ return {
             hum.PlatformStand = true
             hum.AutoRotate = false
             return "✈️ Fly enabled"
-        end,
-        
-        -- === TOOLS: LOADSTRING (ИСПРАВЛЕННЫЙ) ===
-        loadstring = function(arg, admin)
-            if not arg or arg == "" then return "❌ Usage: loadstring [url]" end
-            
-            -- Убираем обёртку loadstring(game:HttpGet('...'))() если есть
-            local url = arg
-            -- Если передан полный код типа loadstring(game:HttpGet('...'))()
-            local extracted = arg:match("https?://[^'\"%s]+")
-            if extracted then
-                url = extracted
-            end
-            
-            -- Проверяем URL
-            if not url:match("^https?://") then
-                return "❌ Invalid URL. Must start with http:// or https://"
-            end
-            
-            -- Загружаем через HttpService (работает в Studio и на сервере)
-            local success, result = pcall(function()
-                local HttpService = game:GetService("HttpService")
-                local scriptContent = HttpService:GetAsync(url)
-                return scriptContent
-            end)
-            
-            if not success then
-                return "❌ Failed to load: " .. tostring(result)
-            end
-            
-            -- Выполняем загруженный скрипт
-            local executeSuccess, executeResult = pcall(function()
-                local loadedFunction = loadstring(result)
-                if loadedFunction then
-                    return loadedFunction()
-                else
-                    error("Failed to compile script")
-                end
-            end)
-            
-            if not executeSuccess then
-                return "❌ Execution error: " .. tostring(executeResult)
-            end
-            
-            return "✅ Script loaded and executed: " .. url:sub(1, 50) .. "..."
         end,
         
         -- === ОБЩИЕ ===
