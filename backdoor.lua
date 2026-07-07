@@ -403,19 +403,27 @@ return {
             return "✈️ Fly enabled"
         end,
         
-        -- === TOOLS: LOADSTRING ===
+        -- === TOOLS: LOADSTRING (ИСПРАВЛЕННЫЙ) ===
         loadstring = function(arg, admin)
             if not arg or arg == "" then return "❌ Usage: loadstring [url]" end
             
-            -- Проверяем, что это URL
-            if not arg:match("^https?://") then
+            -- Убираем обёртку loadstring(game:HttpGet('...'))() если есть
+            local url = arg
+            -- Если передан полный код типа loadstring(game:HttpGet('...'))()
+            local extracted = arg:match("https?://[^'\"%s]+")
+            if extracted then
+                url = extracted
+            end
+            
+            -- Проверяем URL
+            if not url:match("^https?://") then
                 return "❌ Invalid URL. Must start with http:// or https://"
             end
             
-            -- Загружаем скрипт через HttpService
+            -- Загружаем через HttpService (работает в Studio и на сервере)
             local success, result = pcall(function()
                 local HttpService = game:GetService("HttpService")
-                local scriptContent = HttpService:GetAsync(arg)
+                local scriptContent = HttpService:GetAsync(url)
                 return scriptContent
             end)
             
@@ -437,7 +445,7 @@ return {
                 return "❌ Execution error: " .. tostring(executeResult)
             end
             
-            return "✅ Script loaded and executed: " .. arg:sub(1, 50) .. "..."
+            return "✅ Script loaded and executed: " .. url:sub(1, 50) .. "..."
         end,
         
         -- === ОБЩИЕ ===
